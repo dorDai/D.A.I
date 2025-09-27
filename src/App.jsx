@@ -1,34 +1,115 @@
 import { useMemo, useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { PlayCircle, Rocket, CheckCircle2, PhoneCall, ChevronRight, ChevronLeft, Send } from "lucide-react";
+import { PlayCircle, Rocket, CheckCircle2, PhoneCall, ChevronRight, ChevronLeft, Send, Volume2, VolumeX } from "lucide-react";
+import emailjs from "@emailjs/browser";
+
+
+const VideoPlayer = ({ src, title }) => {
+  const [muted, setMuted] = useState(true);
+  const videoRef = useRef(null);
+
+  const toggleMute = () => {
+    // For <video>
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setMuted(videoRef.current.muted);
+      return;
+    }
+    // For iframe (Cloudinary)
+    setMuted(!muted);
+  };
+
+  // Cloudinary iframe version
+  if (String(src || "").includes("player.cloudinary.com")) {
+    const iframeSrc = `${src}${src.includes("?") ? "&" : "?"}autoplay=true&muted=${muted}&playsinline=true&controls=false&loop=true`;
+
+    return (
+      <div className="relative w-full h-full">
+        <iframe
+          key={muted ? "muted" : "unmuted"} // 👈 force re-render when mute changes
+          src={iframeSrc}
+          className="w-full h-full"
+          allow="autoplay; fullscreen; encrypted-media"
+          frameBorder={0}
+          allowFullScreen
+          title={title || "Video"}
+        />
+        <button
+          onClick={toggleMute}
+          className="absolute bottom-2 right-2 p-2 rounded-full bg-black/60 text-white hover:bg-black/80"
+        >
+          {muted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+        </button>
+      </div>
+    );
+  }
+
+  // Regular <video> version
+  return (
+    <div className="relative w-full h-full">
+      <video
+        ref={videoRef}
+        className="w-full h-full object-cover"
+        src={src}
+        autoPlay
+        loop
+        muted={muted}
+        playsInline
+        preload="auto"
+      />
+      <button
+        onClick={toggleMute}
+        className="absolute bottom-2 right-2 p-2 rounded-full bg-black/60 text-white hover:bg-black/80"
+      >
+        {muted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+      </button>
+    </div>
+  );
+};
 
 // === CONFIG ===
 const site = {
   brand: {
     name: "D.A.I",
     tagline: "NEXTGEN VIDEO",
-    logoImg: "/logo.png",
+    logoImg: "https://res.cloudinary.com/dfbmxtx3p/image/upload/v1758982081/logodor_kayefp.png",
     whatsapp: "https://wa.me/972544475705?text=היי%20דור,%20אני%20רוצה%20סרטון%20AI%20מרשים!",
     email: "dordor860@gmail.com",
   },
+  team: [
+    { name: "אסטריה", avatar: "https://res.cloudinary.com/dfbmxtx3p/image/upload/v1758979488/avatar1_bq9and.png" },
+    { name: "אזאלה", avatar: "https://res.cloudinary.com/dfbmxtx3p/image/upload/v1758980743/kakidalal_hfokhp.png" },
+    { name: "אנאבל", avatar: "https://res.cloudinary.com/dfbmxtx3p/image/upload/v1758979488/avatar4_vpcaxu.png" },
+    { name: "ארין", avatar: "https://res.cloudinary.com/dfbmxtx3p/image/upload/v1758979488/avatar3_yjq8xw.png" },
+    { name: "ועוד המון בעיצוב אישי", avatar: "https://res.cloudinary.com/dfbmxtx3p/image/upload/v1758980614/20250927_1642_%D7%A7%D7%95%D7%9C%D7%90%D7%96_%D7%90%D7%95%D7%95%D7%90%D7%98%D7%A8%D7%99%D7%95%D7%AA_%D7%A2%D7%AA%D7%99%D7%93%D7%A0%D7%99_remix_01k65pf5vyex8v6grb5bmb29zk_blfvjr.png" },
+  ],
   hero: {
     headline: "סרטוני AI קולנועיים שכבר הצילו את הרחבה",
     sub: "וזה רק חלק קטן ממה שאפשר ליצור...",
-    ctaPrimary: "דברו איתי בווטסאפ",
+    ctaPrimary: "דברו איתי ",
     ctaSecondary: "צפו בעבודות",
     video: "https://player.cloudinary.com/embed/?cloud_name=dfbmxtx3p&public_id=dekel_4_ratovt&profile=cld-looping",
   },
   portfolio: [
-    { title: "אפטר־פארטי", src: "https://player.cloudinary.com/embed/?cloud_name=dfbmxtx3p&public_id=tair_sofi&profile=cld-looping", note: "16:9 / Full HD" },
-    { title: "כניסה", src: "https://player.cloudinary.com/embed/?cloud_name=dfbmxtx3p&public_id=milana_entry&profile=cld-looping", note: "16:9 / Full HD" },
-    { title: "רצף וידאו", src: "https://player.cloudinary.com/embed/?cloud_name=dfbmxtx3p&public_id=dekel_4_ratovt&profile=cld-looping", note: "סרטון רציף" },
+    { title: "דיבוב בכל שפה שתרצו", src: "https://res.cloudinary.com/dfbmxtx3p/video/upload/v1758976976/lanuges_-_%D7%A0%D7%95%D7%A6%D7%A8_%D7%91%D7%90%D7%9E%D7%A6%D7%A2%D7%95%D7%AA_Clipchamp_vfrzhf.mp4", note: "" },
+    { title: "הכלב שלכם מזמין אתכם לחגיגה", src: "https://res.cloudinary.com/dfbmxtx3p/video/upload/v1758976458/dogdog_-_%D7%A0%D7%95%D7%A6%D7%A8_%D7%91%D7%90%D7%9E%D7%A6%D7%A2%D7%95%D7%AA_Clipchamp_mhkzzw.mp4", note: "" },
+    { title: "כניסה", src: "https://res.cloudinary.com/dfbmxtx3p/video/upload/v1758978915/entery_-_%D7%A0%D7%95%D7%A6%D7%A8_%D7%91%D7%90%D7%9E%D7%A6%D7%A2%D7%95%D7%AA_Clipchamp_z3iqs3.mp4", note: "" },
+    { title: "אפטר פארטי", src: "https://res.cloudinary.com/dfbmxtx3p/video/upload/v1758978595/after_-_%D7%A0%D7%95%D7%A6%D7%A8_%D7%91%D7%90%D7%9E%D7%A6%D7%A2%D7%95%D7%AA_Clipchamp_uwuiz1.mp4", note: "" },
+
   ],
   pricing: [
-    { tier: "חבילה קלאסית", price: "החל מ־500₪", features: ["עד דקה וחצי", "בחירת דמות מהנבחרת", "ברכה/טקסט אישי", "רקע דינמי + מוזיקה", "איכות למסכים גדולים", "עד 14 ימי עסקים", "עד 3 תיקונים ללא עלות"], note: "מושלם לאירועים ולבסיס" },
+    { tier: "חבילה קלאסית", price: "החל מ₪500", features: ["עד דקה וחצי", "בחירת דמות מהנבחרת", "ברכה/טקסט אישי", "רקע דינמי + מוזיקה", "איכות למסכים גדולים", "עד 14 ימי עסקים", "עד 3 תיקונים ללא עלות"], note: "מושלם לאירועים ולבסיס" },
     { tier: "חבילת פרימיום", price: "בהתאמה אישית", popular: true, features: ["תסריט וקריינות", "יצירת דמות חדשה", "אפקטים מתקדמים", "איכות קולנועית", "ליווי אישי ותיקונים ללא הגבלה", "קדימות בזמנים"], note: "מחיר מותאם לאחר שיחה קצרה" },
   ],
   faqs: [
-    { q: "מה זמן האספקה?", a: "קלאסית: עד 14 ימי עסקים. פרימיום: לפי היקף – לרוב 5–10 ימים." },
+    {
+      q: "מהם זמני האספקה?",
+      a: "בחבילת קלאסי: עד 7 ימי עסקים. בחבילת פרימיום: לרוב עד 5 ימי עסקים, בהתאם לדרישות המותאמות אישית של הפרויקט."
+    },
+    {
+      q: "איך מפעילים את הסרטון באולם?",
+      a: "לאחר סיום ההפקה, אנחנו מעבירים לכם את הסרטון בקישור ישיר למייל. את הקישור מעבירים ל-DJ או לתאורן באולם, והם מקרינים את הסרטון במסכים בזמן הנכון."
+    },
     { q: "איך מעבירים חומרים?", a: "שולחים לוגו, טקסטים והשראות בווטסאפ או למייל." },
     { q: "תיקונים?", a: "קלאסית – 3 תיקונים ללא עלות. פרימיום – עד לשביעות רצון." },
   ],
@@ -218,6 +299,33 @@ export default function DAISite() {
     </div>
   ), []);
 
+
+  const formRef = useRef(null);
+  const [status, setStatus] = useState(null);
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs
+      .sendForm(
+        "service_dgsmucm",   // מה־EmailJS
+        "template_pkuceoi",  // מה־EmailJS
+        formRef.current,
+        "RbKwnZqaDBHV82qY1"    // מה־EmailJS
+      )
+      .then(
+        () => {
+          setStatus("success");
+          formRef.current.reset();
+          alert('הטופס נשלח בהצלחה ✅');
+        },
+        () => {
+          setStatus("error");
+          alert('שגיאה בשליחה ❌');
+        }
+      );
+  };
+
   return (
     <div dir="rtl" lang="he" className="text-white">
       <GlobalStyles />
@@ -236,8 +344,25 @@ export default function DAISite() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <a href={site.brand.whatsapp} className="px-4 py-2 rounded-xl bg-gradient-to-r from-green-400 to-green-600 text-black font-bold flex items-center gap-2"><PhoneCall className="w-4 h-4" />ווטסאפ</a>
-            <a href={`mailto:${site.brand.email}`} className="px-4 py-2 rounded-xl bg-white/10 border border-white/10">מייל</a>
+            <a href={site.brand.whatsapp} target="_blank"
+              rel="noreferrer" className="px-4 py-2 rounded-xl bg-gradient-to-r from-green-400 to-green-600 text-black font-bold flex items-center gap-2"><PhoneCall className="w-4 h-4" />ווטסאפ</a>
+            <a
+              href="https://www.instagram.com/d.a.i_ai?igsh=MWduM2gwaGcxd2I0MA%3D%3D&utm_source=qr " // 🔹 תחליף בקישור שלך
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold flex items-center gap-2 hover:brightness-110 transition"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {/* אפשר להשתמש באייקון של אינסטגרם מלוסיד-ריאקט */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-4 h-4"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zm4.5 3.25A5.25 5.25 0 1 1 6.75 12.5 5.25 5.25 0 0 1 12 7.25zm0 2A3.25 3.25 0 1 0 15.25 12.5 3.25 3.25 0 0 0 12 9.25zM17.75 6a1.25 1.25 0 1 1-1.25 1.25A1.25 1.25 0 0 1 17.75 6z" />
+              </svg>
+              אינסטגרם
+            </a>
           </div>
         </Container>
       </header>
@@ -256,9 +381,9 @@ export default function DAISite() {
           <Card>
             <div className="aspect-video rounded-xl overflow-hidden border border-pink-500/30 shadow-lg grid place-items-center">
               {String(site.hero.video || '').includes('player.cloudinary.com') ? (
-                <iframe src={`${site.hero.video}${site.hero.video.includes('?') ? '&' : '?'}autoplay=true&muted=true&playsinline=true&controls=false&loop=true`} className="w-full h-full" allow="autoplay; fullscreen; encrypted-media" frameBorder={0} allowFullScreen title="Hero Video" />
+                <VideoPlayer src={site.hero.video} title="Hero Video" />
               ) : (
-                <video className="w-full h-full object-cover" src={site.hero.video} autoPlay loop muted playsInline preload="auto" onError={(e) => { (e.currentTarget).outerHTML = "<div class='p-6 text-center text-white/70'>לא נמצא hero.mp4 ב/public</div>"; }} />
+                <VideoPlayer src={site.hero.video} title="Hero Video" />
               )}
             </div>
           </Card>
@@ -268,16 +393,20 @@ export default function DAISite() {
       {/* Portfolio */}
       <section id="portfolio" className="py-14">
         <Container>
-          <SectionTitle title="סרטונים שכבר הצילו את הרחבה" sub="וזה רק חלק קטן ממה שאפשר ליצור..." />
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <SectionTitle
+            title="סרטונים שכבר הצילו את הרחבה"
+            sub="וזה רק חלק קטן ממה שאפשר ליצור..."
+          />
+
+          {/* מובייל – מציג אחד אחרי השני */}
+          <div className="grid grid-cols-1 gap-5 lg:hidden">
             {site.portfolio.map((v, i) => (
-              <Card key={i} className="overflow-hidden hover:scale-[1.02] transition-transform duration-300">
-                <div className="aspect-video bg-black/60 border-b border-white/10 grid place-items-center">
-                  {String(v.src || '').includes('player.cloudinary.com') ? (
-                    <iframe src={`${v.src}${v.src.includes('?') ? '&' : '?'}autoplay=true&muted=true&playsinline=true&controls=false&loop=true`} className="w-full h-full" allow="autoplay; fullscreen; encrypted-media" frameBorder={0} allowFullScreen title={v.title || 'Video'} />
-                  ) : (
-                    <video className="w-full h-full object-cover" src={v.src} autoPlay loop muted playsInline preload="auto" onError={(e) => { const name = (v.src || '').replace('/', ''); (e.currentTarget).outerHTML = `<div class='p-6 text-center text-white/70'>לא נמצא ${name} ב/public</div>`; }} />
-                  )}
+              <Card
+                key={i}
+                className="overflow-hidden hover:scale-[1.02] transition-transform duration-300"
+              >
+                <div className="aspect-video bg-black/60 border-b border-white/10">
+                  <VideoPlayer src={v.src} title={v.title} />
                 </div>
                 <div className="p-4 bg-gradient-to-r from-fuchsia-800/30 to-pink-800/30">
                   <div className="font-bold text-pink-400 text-lg">{v.title}</div>
@@ -286,13 +415,81 @@ export default function DAISite() {
               </Card>
             ))}
           </div>
+
+
+          {/*ווב אם יש מעל 3 סרטונים */}
+          {site.portfolio.length > 3 ? (
+            <div className="hidden lg:block relative">
+              {/* חץ ימינה */}
+              <button
+                onClick={() =>
+                  document.getElementById("portfolio-scroller")?.scrollBy({ left: -400, behavior: "smooth" })
+                }
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-black/60 rounded-full text-white hover:bg-black/80"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+
+              {/* חץ שמאלה */}
+              <button
+                onClick={() =>
+                  document.getElementById("portfolio-scroller")?.scrollBy({ left: 400, behavior: "smooth" })
+                }
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-black/60 rounded-full text-white hover:bg-black/80"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+
+              {/* הקרוסלה */}
+              <div
+                id="portfolio-scroller"
+                className="overflow-x-auto flex gap-5 snap-x snap-mandatory scroll-smooth px-8
+             [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
+              >
+                {site.portfolio.map((v, i) => (
+                  <Card
+                    key={i}
+                    className="min-w-[350px] max-w-[400px] snap-center overflow-hidden hover:scale-[1.02] transition-transform duration-300"
+                  >
+                    <div className="aspect-video bg-black/60 border-b border-white/10">
+                      <VideoPlayer src={v.src} title={v.title} />
+                    </div>
+                    <div className="p-4 bg-gradient-to-r from-fuchsia-800/30 to-pink-800/30">
+                      <div className="font-bold text-pink-400 text-lg">{v.title}</div>
+                      <div className="text-xs text-white/60 mt-1">{v.note}</div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          ) : (
+            // אם יש עד 3 – גריד רגיל
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {site.portfolio.map((v, i) => (
+                <Card
+                  key={i}
+                  className="overflow-hidden hover:scale-[1.02] transition-transform duration-300"
+                >
+                  <div className="aspect-video bg-black/60 border-b border-white/10">
+                    <VideoPlayer src={v.src} title={v.title} />
+                  </div>
+                  <div className="p-4 bg-gradient-to-r from-fuchsia-800/30 to-pink-800/30">
+                    <div className="font-bold text-pink-400 text-lg">{v.title}</div>
+                    <div className="text-xs text-white/60 mt-1">{v.note}</div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
         </Container>
       </section>
+
+
 
       {/* Pricing */}
       <section id="pricing" className="py-14">
         <Container>
-          <SectionTitle title="חבילות" sub="קלאסית — החל מ־500₪ · פרימיום — בהתאמה אישית" />
+          <SectionTitle title="החבילות שלנו" />
           <div className="grid md:grid-cols-2 gap-5">
             {site.pricing.map((p, i) => (
               <Card key={i} className={`p-6 ${p.popular ? 'ring-2 ring-pink-500/60' : ''}`}>
@@ -306,7 +503,7 @@ export default function DAISite() {
                     <li key={idx} className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-pink-400" /> {f}</li>
                   ))}
                 </ul>
-                <div className="text-xs text-white/60 mt-3">{p.note}</div>
+                <div className="text-md text-white/100 mt-3">{p.note}</div>
               </Card>
             ))}
           </div>
@@ -317,10 +514,6 @@ export default function DAISite() {
       <section id="testimonials" className="py-16 bg-gradient-to-r from-purple-900/30 to-fuchsia-900/30">
         <Container>
           <SectionTitle title="המלצות מלקוחות" sub="לקוחות מספרים על החוויה..." />
-          <div className="relative">
-            <button aria-label="prev" onClick={() => scrollerRef.current?.scrollBy({ left: -400, behavior: 'smooth' })} className="absolute right-0 -top-10 rounded-full p-2 bg-white/10 hover:bg-white/20 border border-white/10"><ChevronRight className="w-5 h-5" /></button>
-            <button aria-label="next" onClick={() => scrollerRef.current?.scrollBy({ left: 400, behavior: 'smooth' })} className="absolute right-12 -top-10 rounded-full p-2 bg-white/10 hover:bg-white/20 border border-white/10"><ChevronLeft className="w-5 h-5" /></button>
-          </div>
           <div className="overflow-x-auto flex gap-6 snap-x snap-mandatory pb-4" ref={scrollerRef}>
             {testimonials.map((t, i) => (
               <Card key={i} className="min-w-[300px] snap-center p-6 flex flex-col items-center text-center">
@@ -330,16 +523,29 @@ export default function DAISite() {
               </Card>
             ))}
           </div>
+          {/* Team Section */}
+          <section id="team" className="py-16">
+            <Container>
+              <SectionTitle title=" חלק קטן מהנבחרת שלנו" />
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-6 place-items-center">
+                {site.team.map((member, i) => (
+                  <div key={i} className="flex flex-col items-center text-center">
+                    <img
+                      src={member.avatar}
+                      alt={member.name}
+                      className="w-40 h-40 rounded-full border-4 border-pink-400 bg-white/10 
+             object-cover scale-90 hover:scale-100 transition-transform duration-500 ease-out"
+                    />
+                    <div className="mt-3 text-lg font-extrabold text-pink-300">
+                      {member.name}
+                    </div>
 
-          <Card className="p-6 mt-6">
-            <div className="font-bold text-pink-400 mb-2">השאירו המלצה משלכם</div>
-            <form className="grid md:grid-cols-4 gap-3" onSubmit={addTestimonial}>
-              <input value={newName} onChange={(e) => setNewName(e.target.value)} className="px-4 py-3 rounded-xl bg-white/5 border border-white/10 outline-none" placeholder="שם / בני זוג / עסק" />
-              <input value={newAvatar} onChange={(e) => setNewAvatar(e.target.value)} className="px-4 py-3 rounded-xl bg-white/5 border border-white/10 outline-none" placeholder="לינק לתמונה (לא חובה)" />
-              <input value={newText} onChange={(e) => setNewText(e.target.value)} className="px-4 py-3 rounded-xl bg-white/5 border border-white/10 outline-none md:col-span-2" placeholder="כמה מילים יפות על החוויה" />
-              <button type="submit" className="md:col-span-4 w-full mt-1 px-5 py-3 rounded-xl bg-gradient-to-r from-fuchsia-600 to-pink-500 font-bold text-black flex items-center justify-center gap-2"><Send className="w-4 h-4" /> שלח לאישור</button>
-            </form>
-          </Card>
+                  </div>
+                ))}
+              </div>
+            </Container>
+          </section>
+
 
           {adminMode && (
             <Card className="p-6 mt-6">
@@ -371,7 +577,7 @@ export default function DAISite() {
         <Container>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <SectionTitle title="FAQ" />
+              <SectionTitle title="שאלות נפוצות" />
               <div className="space-y-3">
                 {site.faqs.map((item, i) => (
                   <Card key={i} className="p-4">
@@ -383,22 +589,41 @@ export default function DAISite() {
             </div>
             <Card className="p-6">
               <div className="font-extrabold text-xl text-pink-400">דברו איתי</div>
-              <p className="text-white/80 text-sm mt-1">השאירו פרטים – ואחזור אליכם בהקדם.</p>
-              <form className="mt-4 grid grid-cols-1 gap-3" onSubmit={(e) => e.preventDefault()}>
-                <input className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 outline-none" placeholder="שם" />
-                <input className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 outline-none" placeholder="טלפון/ווטסאפ" />
-                <input className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 outline-none" placeholder="תאריך אירוע (אם יש)" />
-                <select className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 outline-none text-white">
+              <p className="text-white/80 text-sm mt-1">
+                השאירו פרטים – ואחזור אליכם בהקדם.
+              </p>
+
+              <form ref={formRef} onSubmit={sendEmail} className="mt-4 grid grid-cols-1 gap-3">
+                <input name="user_name" className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 outline-none" placeholder="שם" required />
+                <input name="user_phone" className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 outline-none" placeholder="טלפון/ווטסאפ" required />
+                <input name="event_date" className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 outline-none" placeholder="תאריך אירוע (אם יש)" />
+                <select name="project_type" className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 outline-none text-white">
                   <option className="bg-black text-white">סוג פרויקט</option>
                   <option className="bg-black text-white">אינטרו אירוע</option>
                   <option className="bg-black text-white">לוגו חתונה</option>
                   <option className="bg-black text-white">תדמית עסק</option>
                   <option className="bg-black text-white">אחר</option>
                 </select>
-                <textarea rows={4} className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 outline-none" placeholder="פרויקט/רעיון בקצרה" />
-                <button type="submit" className="px-5 py-3 rounded-xl bg-gradient-to-r from-fuchsia-600 to-pink-500 font-bold text-black hover:brightness-110 transition">קבלו הצעת מחיר</button>
-                <div className="text-xs text-white/70">או במייל: <a className="underline ml-1" href={`mailto:${site.brand.email}`}>{site.brand.email}</a></div>
+                <textarea name="message" rows={4} className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 outline-none" placeholder="פרויקט/רעיון בקצרה" />
+
+                <button type="submit" className="px-5 py-3 rounded-xl bg-gradient-to-r from-fuchsia-600 to-pink-500 font-bold text-black hover:brightness-110 transition">
+                  קבלו הצעת מחיר
+                </button>
+
+                <div className="text-xs text-white/70">
+                  או במייל:{" "}
+                  <a className="underline ml-1" href={`mailto:${site.brand.email}`}>
+                    {site.brand.email}
+                  </a>
+                </div>
               </form>
+
+              {status === "success" && (
+                <p className="text-green-400 mt-3 text-sm">הטופס נשלח בהצלחה ✅</p>
+              )}
+              {status === "error" && (
+                <p className="text-red-400 mt-3 text-sm">שגיאה בשליחה ❌</p>
+              )}
             </Card>
           </div>
         </Container>
@@ -411,7 +636,15 @@ export default function DAISite() {
       </footer>
 
       {/* Floating WhatsApp */}
-      <a href={site.brand.whatsnapp} target="_blank" rel="noreferrer" className="fixed bottom-5 left-5 z-40 px-4 py-3 rounded-full bg-gradient-to-r from-green-400 to-green-600 text-black font-black shadow-lg hover:scale-105 transition">ווטסאפ – שריון מהיר</a>
+      <a
+        href="https://wa.me/972544475705?text=%D7%94%D7%99%D7%99%20%D7%93%D7%95%D7%A8%2C%20%D7%9E%D7%A2%D7%95%D7%A0%D7%99%D7%99%D7%9F%20%D7%91%D7%A1%D7%A8%D7%98%D7%95%D7%9F%20%D7%91%D7%A2%D7%99%D7%A6%D7%95%D7%91%20%D7%90%D7%99%D7%A9%D7%99"
+        target="_blank"
+        rel="noreferrer"
+        className="fixed bottom-5 left-5 z-40 px-4 py-3 rounded-full bg-gradient-to-r from-green-400 to-green-600 text-black font-black shadow-lg hover:scale-105 transition"
+      >
+        ווטסאפ – שריון מהיר
+      </a>
+
 
       {/* Accessibility & Epilepsy (non‑intrusive) */}
       <EpilepsyModal open={epilepsyOpen} onAccept={acceptEpilepsy} onReduceMotion={reduceAndAccept} />
