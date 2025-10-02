@@ -376,26 +376,62 @@ export default function DAISite() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <a href={site.brand.whatsapp} target="_blank"
-              rel="noreferrer" className="px-4 py-2 rounded-xl bg-gradient-to-r from-green-400 to-green-600 text-black font-bold flex items-center gap-2"><PhoneCall className="w-4 h-4" />ווטסאפ</a>
+            {/* WhatsApp */}
             <a
-              href="https://www.instagram.com/d.a.i_ai?igsh=MWduM2gwaGcxd2I0MA%3D%3D&utm_source=qr " // 🔹 תחליף בקישור שלך
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold flex items-center gap-2 hover:brightness-110 transition"
+              href={site.brand.whatsapp}
               target="_blank"
               rel="noreferrer"
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-green-400 to-green-600 text-black font-bold flex items-center gap-2 hover:brightness-110 transition"
             >
-              {/* אפשר להשתמש באייקון של אינסטגרם מלוסיד-ריאקט */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="w-4 h-4"
+                className="w-5 h-5"
+                viewBox="0 0 32 32"
+                fill="currentColor"
+              >
+                <path d="M16 .4C7.4.4.4 7.4.4 16c0 2.8.7 5.4 2 7.7L.1 31.9l8.4-2.2c2.2 1.2 4.8 1.9 7.5 1.9 8.6 0 15.6-7 15.6-15.6C31.6 7.4 24.6.4 16 .4zm0 28.5c-2.4 0-4.7-.6-6.7-1.8l-.5-.3-5 1.3 1.3-4.9-.3-.5c-1.2-2-1.8-4.3-1.8-6.7C3 9.2 8.9 3.3 16 3.3S29 9.2 29 16.3c0 7.1-5.9 12.6-13 12.6zm7.5-9.5c-.4-.2-2.4-1.2-2.8-1.3s-.6-.2-.8.2-1 1.3-1.2 1.5-.4.3-.8.1c-.4-.2-1.5-.6-2.8-1.8-1-1-1.8-2.2-2-2.6-.2-.4 0-.6.2-.8.2-.2.4-.4.6-.6.2-.2.3-.3.4-.5.1-.2.1-.4 0-.6-.1-.2-.8-1.9-1.1-2.6-.3-.7-.6-.6-.8-.6h-.7c-.2 0-.6.1-1 .4-.4.3-1.3 1.2-1.3 3s1.4 3.5 1.6 3.7c.2.2 2.8 4.2 6.8 5.9.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.4-1 2.7-1.9.3-.9.3-1.6.2-1.9-.1-.3-.4-.4-.8-.6z" />
+              </svg>
+              <span className="hidden md:inline">ווטסאפ</span>
+            </a>
+
+            {/* Instagram */}
+            <a
+              href="https://www.instagram.com/d.a.i_ai?igsh=MWduM2gwaGcxd2I0MA%3D%3D&utm_source=qr"
+              target="_blank"
+              rel="noreferrer"
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold flex items-center gap-2 hover:brightness-110 transition"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-5 h-5"
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
                 <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zm4.5 3.25A5.25 5.25 0 1 1 6.75 12.5 5.25 5.25 0 0 1 12 7.25zm0 2A3.25 3.25 0 1 0 15.25 12.5 3.25 3.25 0 0 0 12 9.25zM17.75 6a1.25 1.25 0 1 1-1.25 1.25A1.25 1.25 0 0 1 17.75 6z" />
               </svg>
-              אינסטגרם
+              <span className="hidden md:inline">אינסטגרם</span>
+            </a>
+
+            {/* TikTok */}
+            <a
+              href="https://www.tiktok.com/@rinaterblat?_t=ZS-90DWbS81sjU&_r=1" // 🔹 תחליף בלינק שלך
+              target="_blank"
+              rel="noreferrer"
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-gray-800 to-black text-white font-bold flex items-center gap-2 hover:brightness-110 transition"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-5 h-5"
+                viewBox="0 0 48 48"
+                fill="currentColor"
+              >
+                <path d="M41 16.5c-2.2 0-4.4-.7-6.2-2v14.2c0 7.6-6.2 13.8-13.8 13.8-2.8 0-5.4-.8-7.5-2.3-2.9-2-4.8-5.4-4.8-9.2 0-6.2 5-11.2 11.2-11.2 1.1 0 2.1.2 3 .5v6.4c-.9-.6-2-1-3.2-1-3.1 0-5.6 2.5-5.6 5.6 0 1.9.9 3.6 2.4 4.6 1 .7 2.2 1.1 3.5 1.1 3.1 0 5.6-2.5 5.6-5.6V7h6.3c1.3 2.9 4.2 5 7.6 5.5V16.5z" />
+              </svg>
+              <span className="hidden md:inline">טיקטוק</span>
             </a>
           </div>
+
+
         </Container>
       </header>
 
@@ -702,7 +738,7 @@ export default function DAISite() {
         rel="noreferrer"
         className="fixed bottom-2 left-5 z-40 px-4 py-3 rounded-full bg-gradient-to-r from-green-400 to-green-600 text-black font-black shadow-lg hover:scale-105 transition"
       >
-         שריון מהיר
+        שריון מהיר
       </a>
 
 
