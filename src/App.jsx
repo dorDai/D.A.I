@@ -438,7 +438,7 @@ export default function DAISite() {
                 className="overflow-hidden hover:scale-[1.02] transition-transform duration-300"
               >
                 <div className="aspect-video bg-black/60 border-b border-white/10">
-                  <VideoPlayer src={v.src} title={v.title} autoPlay={false} />
+                  <VideoPlayer src={v.src} title={v.title} autoPlay={true} />
                 </div>
                 <div className="p-4 bg-gradient-to-r from-fuchsia-800/30 to-pink-800/30">
                   <div className="font-bold text-pink-400 text-lg">{v.title}</div>
@@ -484,7 +484,7 @@ export default function DAISite() {
                     className="min-w-[350px] max-w-[400px] snap-center overflow-hidden hover:scale-[1.02] transition-transform duration-300"
                   >
                     <div className="aspect-video bg-black/60 border-b border-white/10">
-                      <VideoPlayer src={v.src} title={v.title} autoPlay={false} />
+                      <VideoPlayer src={v.src} title={v.title} autoPlay={true} />
                     </div>
                     <div className="p-4 bg-gradient-to-r from-fuchsia-800/30 to-pink-800/30">
                       <div className="font-bold text-pink-400 text-lg">{v.title}</div>
@@ -503,7 +503,7 @@ export default function DAISite() {
                   className="overflow-hidden hover:scale-[1.02] transition-transform duration-300"
                 >
                   <div className="aspect-video bg-black/60 border-b border-white/10">
-                    <VideoPlayer src={v.src} title={v.title} autoPlay={false} />
+                    <VideoPlayer src={v.src} title={v.title} autoPlay={true} />
                   </div>
                   <div className="p-4 bg-gradient-to-r from-fuchsia-800/30 to-pink-800/30">
                     <div className="font-bold text-pink-400 text-lg">{v.title}</div>
