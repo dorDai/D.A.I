@@ -1,32 +1,42 @@
 import { useMemo, useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { PlayCircle, Rocket, CheckCircle2, PhoneCall, ChevronRight, ChevronLeft, Send, Volume2, VolumeX } from "lucide-react";
+import { PlayCircle, Rocket, CheckCircle2, PhoneCall, ChevronRight, ChevronLeft, Send, Volume2, VolumeX, Pause, Play } from "lucide-react";
 import emailjs from "@emailjs/browser";
 
 
-const VideoPlayer = ({ src, title }) => {
+const VideoPlayer = ({ src, title, autoPlay = true }) => {
   const [muted, setMuted] = useState(true);
+  const [playing, setPlaying] = useState(autoPlay);
   const videoRef = useRef(null);
 
   const toggleMute = () => {
-    // For <video>
     if (videoRef.current) {
       videoRef.current.muted = !videoRef.current.muted;
       setMuted(videoRef.current.muted);
-      return;
+    } else {
+      setMuted(!muted);
     }
-    // For iframe (Cloudinary)
-    setMuted(!muted);
+  };
+
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+    if (playing) {
+      videoRef.current.pause();
+    } else {
+      videoRef.current.play();
+    }
+    setPlaying(!playing);
   };
 
   // Cloudinary iframe version
   if (String(src || "").includes("player.cloudinary.com")) {
-    const iframeSrc = `${src}${src.includes("?") ? "&" : "?"}autoplay=true&muted=${muted}&playsinline=true&controls=false&loop=true`;
+    const iframeSrc = `${src}${src.includes("?") ? "&" : "?"
+      }autoplay=${playing}&muted=${muted}&playsinline=true&controls=false&loop=true`;
 
     return (
-      <div className="relative w-full h-full">
+      <div className="relative w-full h-full group">
         <iframe
-          key={muted ? "muted" : "unmuted"} // 👈 force re-render when mute changes
+          key={`${muted}-${playing}`}
           src={iframeSrc}
           className="w-full h-full"
           allow="autoplay; fullscreen; encrypted-media"
@@ -34,11 +44,19 @@ const VideoPlayer = ({ src, title }) => {
           allowFullScreen
           title={title || "Video"}
         />
+        {/* Mute Button */}
         <button
           onClick={toggleMute}
-          className="absolute bottom-2 right-2 p-2 rounded-full bg-black/60 text-white hover:bg-black/80"
+          className="absolute bottom-2 right-2 p-2 rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition"
         >
           {muted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+        </button>
+        {/* Play/Pause Button */}
+        <button
+          onClick={togglePlay}
+          className="absolute bottom-2 left-2 p-2 rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition"
+        >
+          {playing ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
         </button>
       </div>
     );
@@ -46,26 +64,37 @@ const VideoPlayer = ({ src, title }) => {
 
   // Regular <video> version
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-full group">
       <video
         ref={videoRef}
         className="w-full h-full object-cover"
         src={src}
-        autoPlay
+        autoPlay={autoPlay}
         loop
         muted={muted}
         playsInline
         preload="auto"
       />
+      {/* Mute Button */}
       <button
         onClick={toggleMute}
-        className="absolute bottom-2 right-2 p-2 rounded-full bg-black/60 text-white hover:bg-black/80"
+        className="absolute bottom-2 right-2 p-2 rounded-full bg-black/60 text-white"
       >
         {muted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+      </button>
+      {/* Play/Pause Button */}
+      <button
+        onClick={togglePlay}
+        className="absolute bottom-2 left-2 p-2 rounded-full bg-black/60 text-white"
+      >
+        {playing ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
       </button>
     </div>
   );
 };
+
+
+
 
 // === CONFIG ===
 const site = {
@@ -78,27 +107,30 @@ const site = {
   },
   team: [
     { name: "אסטריה", avatar: "https://res.cloudinary.com/dfbmxtx3p/image/upload/v1758979488/avatar1_bq9and.png" },
-    { name: "אזאלה", avatar: "https://res.cloudinary.com/dfbmxtx3p/image/upload/v1758980743/kakidalal_hfokhp.png" },
+    { name: "ונוס", avatar: "https://res.cloudinary.com/dfbmxtx3p/image/upload/v1758980743/kakidalal_hfokhp.png" },
     { name: "אנאבל", avatar: "https://res.cloudinary.com/dfbmxtx3p/image/upload/v1758979488/avatar4_vpcaxu.png" },
-    { name: "ארין", avatar: "https://res.cloudinary.com/dfbmxtx3p/image/upload/v1758979488/avatar3_yjq8xw.png" },
+    { name: "אנג'ל", avatar: "https://res.cloudinary.com/dfbmxtx3p/image/upload/v1759406806/%D7%A6%D7%99%D7%9C%D7%95%D7%9D_%D7%9E%D7%A1%D7%9A_2025-10-02_150616_gbzvp6.png" },
+    { name: "זואי", avatar: "https://res.cloudinary.com/dfbmxtx3p/image/upload/v1758979488/avatar3_yjq8xw.png" },
     { name: "ועוד המון בעיצוב אישי", avatar: "https://res.cloudinary.com/dfbmxtx3p/image/upload/v1758980614/20250927_1642_%D7%A7%D7%95%D7%9C%D7%90%D7%96_%D7%90%D7%95%D7%95%D7%90%D7%98%D7%A8%D7%99%D7%95%D7%AA_%D7%A2%D7%AA%D7%99%D7%93%D7%A0%D7%99_remix_01k65pf5vyex8v6grb5bmb29zk_blfvjr.png" },
   ],
   hero: {
-    headline: "סרטוני AI קולנועיים שכבר הצילו את הרחבה",
-    sub: "וזה רק חלק קטן ממה שאפשר ליצור...",
+    headline: "סרטוני AI קולנועיים ברמה הגבוהה ביותר",
+    sub: "תנו למסכים לרקוד יחד איתכם",
     ctaPrimary: "דברו איתי ",
     ctaSecondary: "צפו בעבודות",
     video: "https://res.cloudinary.com/dfbmxtx3p/video/upload/v1758978915/entery_-_%D7%A0%D7%95%D7%A6%D7%A8_%D7%91%D7%90%D7%9E%D7%A6%D7%A2%D7%95%D7%AA_Clipchamp_z3iqs3.mp4",
   },
   portfolio: [
-    { title: "דיבוב בכל שפה שתרצו", src: "https://res.cloudinary.com/dfbmxtx3p/video/upload/f_auto,q_auto,w_720/v1758976976/lanuges_-_%D7%A0%D7%95%D7%A6%D7%A8_%D7%91%D7%90%D7%9E%D7%A6%D7%A2%D7%95%D7%AA_Clipchamp_vfrzhf.mp4", note: "" },
+    { title: " סרטון רקע שרץ לאורך כל הערב", src: "https://res.cloudinary.com/dfbmxtx3p/video/upload/f_auto,q_auto,w_720/v1759404815/bacgroundtrailer_-_%D7%A0%D7%95%D7%A6%D7%A8_%D7%91%D7%90%D7%9E%D7%A6%D7%A2%D7%95%D7%AA_Clipchamp_tkfzkx.mp4", note: "" },
     { title: "הכלב שלכם מזמין אתכם לחגיגה", src: "https://res.cloudinary.com/dfbmxtx3p/video/upload/f_auto,q_auto,w_720/v1758976458/dogdog_-_%D7%A0%D7%95%D7%A6%D7%A8_%D7%91%D7%90%D7%9E%D7%A6%D7%A2%D7%95%D7%AA_Clipchamp_mhkzzw.mp4", note: "" },
     { title: "כניסה", src: "https://res.cloudinary.com/dfbmxtx3p/video/upload/f_auto,q_auto,w_720/v1757935114/dekel_4_ratovt.mp4", note: "" },
     { title: "אפטר פארטי", src: "https://res.cloudinary.com/dfbmxtx3p/video/upload/f_auto,q_auto,w_720/v1758978595/after_-_%D7%A0%D7%95%D7%A6%D7%A8_%D7%91%D7%90%D7%9E%D7%A6%D7%A2%D7%95%D7%AA_Clipchamp_uwuiz1.mp4", note: "" },
+    { title: "דיבוב בכל שפה שתרצו", src: "https://res.cloudinary.com/dfbmxtx3p/video/upload/f_auto,q_auto,w_720/v1758976976/lanuges_-_%D7%A0%D7%95%D7%A6%D7%A8_%D7%91%D7%90%D7%9E%D7%A6%D7%A2%D7%95%D7%AA_Clipchamp_vfrzhf.mp4", note: "" },
+
 
   ],
   pricing: [
-    { tier: "חבילה קלאסית", price: "החל מ₪500", features: ["עד דקה וחצי", "בחירת דמות מהנבחרת", "ברכה/טקסט אישי", "רקע דינמי + מוזיקה", "איכות למסכים גדולים", "עד 14 ימי עסקים", "עד 3 תיקונים ללא עלות"], note: "מושלם לאירועים ולבסיס" },
+    { tier: "חבילה קלאסית", price: "החל מ₪500", features: ["עד דקה וחצי", "בחירת דמות מהנבחרת", "ברכה/טקסט אישי", "רקע דינמי + מוזיקה", "איכות למסכים גדולים", "עד 7 ימי עסקים", "עד 3 תיקונים ללא עלות"], note: "מושלם לאירועים " },
     { tier: "חבילת פרימיום", price: "בהתאמה אישית", popular: true, features: ["תסריט וקריינות", "יצירת דמות חדשה", "אפקטים מתקדמים", "איכות קולנועית", "ליווי אישי ותיקונים ללא הגבלה", "קדימות בזמנים"], note: "מחיר מותאם לאחר שיחה קצרה" },
   ],
   faqs: [
@@ -381,9 +413,9 @@ export default function DAISite() {
           <Card>
             <div className="aspect-video rounded-xl overflow-hidden border border-pink-500/30 shadow-lg grid place-items-center">
               {String(site.hero.video || '').includes('player.cloudinary.com') ? (
-                <VideoPlayer src={site.hero.video} title="Hero Video" />
+                <VideoPlayer src={site.hero.video} title="Hero Video" autoPlay={true} />
               ) : (
-                <VideoPlayer src={site.hero.video} title="Hero Video" />
+                <VideoPlayer src={site.hero.video} title="Hero Video" autoPlay={true} />
               )}
             </div>
           </Card>
@@ -406,7 +438,7 @@ export default function DAISite() {
                 className="overflow-hidden hover:scale-[1.02] transition-transform duration-300"
               >
                 <div className="aspect-video bg-black/60 border-b border-white/10">
-                  <VideoPlayer src={v.src} title={v.title} />
+                  <VideoPlayer src={v.src} title={v.title} autoPlay={false} />
                 </div>
                 <div className="p-4 bg-gradient-to-r from-fuchsia-800/30 to-pink-800/30">
                   <div className="font-bold text-pink-400 text-lg">{v.title}</div>
@@ -423,7 +455,7 @@ export default function DAISite() {
               {/* חץ ימינה */}
               <button
                 onClick={() =>
-                  document.getElementById("portfolio-scroller")?.scrollBy({ left: -400, behavior: "smooth" })
+                  document.getElementById("portfolio-scroller")?.scrollBy({ left: 400, behavior: "smooth" })
                 }
                 className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-black/60 rounded-full text-white hover:bg-black/80"
               >
@@ -433,7 +465,7 @@ export default function DAISite() {
               {/* חץ שמאלה */}
               <button
                 onClick={() =>
-                  document.getElementById("portfolio-scroller")?.scrollBy({ left: 400, behavior: "smooth" })
+                  document.getElementById("portfolio-scroller")?.scrollBy({ left: -400, behavior: "smooth" })
                 }
                 className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-black/60 rounded-full text-white hover:bg-black/80"
               >
@@ -452,7 +484,7 @@ export default function DAISite() {
                     className="min-w-[350px] max-w-[400px] snap-center overflow-hidden hover:scale-[1.02] transition-transform duration-300"
                   >
                     <div className="aspect-video bg-black/60 border-b border-white/10">
-                      <VideoPlayer src={v.src} title={v.title} />
+                      <VideoPlayer src={v.src} title={v.title} autoPlay={false} />
                     </div>
                     <div className="p-4 bg-gradient-to-r from-fuchsia-800/30 to-pink-800/30">
                       <div className="font-bold text-pink-400 text-lg">{v.title}</div>
@@ -471,7 +503,7 @@ export default function DAISite() {
                   className="overflow-hidden hover:scale-[1.02] transition-transform duration-300"
                 >
                   <div className="aspect-video bg-black/60 border-b border-white/10">
-                    <VideoPlayer src={v.src} title={v.title} />
+                    <VideoPlayer src={v.src} title={v.title} autoPlay={false} />
                   </div>
                   <div className="p-4 bg-gradient-to-r from-fuchsia-800/30 to-pink-800/30">
                     <div className="font-bold text-pink-400 text-lg">{v.title}</div>
@@ -493,10 +525,10 @@ export default function DAISite() {
           <div className="grid md:grid-cols-2 gap-5">
             {site.pricing.map((p, i) => (
               <Card key={i} className={`p-6 ${p.popular ? 'ring-2 ring-pink-500/60' : ''}`}>
-                {p.popular && <div className="mb-2 text-xs text-pink-400">הכי פופולרי</div>}
+                {p.popular && <div className="mb-2 text-sm text-pink-400">הכי פופולרי</div>}
                 <div className="flex items-baseline justify-between">
                   <div className="text-xl font-black">{p.tier}</div>
-                  <div className="text-3xl font-black text-pink-400">{p.price}</div>
+                  <div className="text-2xl md:text-3xl font-black text-pink-400">{p.price}</div>
                 </div>
                 <ul className="mt-4 space-y-2 text-white/80 text-sm">
                   {p.features.map((f, idx) => (
@@ -529,19 +561,23 @@ export default function DAISite() {
               <SectionTitle title=" חלק קטן מהנבחרת שלנו" />
               <div className="grid grid-cols-2 md:grid-cols-5 gap-6 place-items-center">
                 {site.team.map((member, i) => (
-                  <div key={i} className="flex flex-col items-center text-center">
+                  <div
+                    key={i}
+                    className={`flex flex-col items-center text-center 
+      ${i === 4 ? "md:hidden" : ""}`}
+                  >
                     <img
                       src={member.avatar}
                       alt={member.name}
                       className="w-40 h-40 rounded-full border-4 border-pink-400 bg-white/10 
-             object-cover scale-90 hover:scale-100 transition-transform duration-500 ease-out"
+        object-cover scale-90 hover:scale-100 transition-transform duration-500 ease-out"
                     />
                     <div className="mt-3 text-lg font-extrabold text-pink-300">
                       {member.name}
                     </div>
-
                   </div>
                 ))}
+
               </div>
             </Container>
           </section>
@@ -631,9 +667,33 @@ export default function DAISite() {
 
       {/* Footer */}
       <footer className="py-12 text-center text-white/70 text-sm tracking-wide">
-        © {new Date().getFullYear()} {site.brand.name} — {site.brand.tagline}. נבנה באהבה וב‑AI.
-        <div className="mt-2 text-[11px] text-white/50">התוכן עשוי לכלול אפקטים חזותיים מהירים. השימוש באתר ובסרטונים באחריות המשתמש בלבד.</div>
+        © {new Date().getFullYear()} D.A.I – NEXTGEN VIDEO. נבנה באהבה וב-AI.
+        <div className="mt-2 text-[11px] text-white/50 leading-relaxed max-w-3xl mx-auto">
+          חלק מהתוכן באתר נוצר באמצעות פלטפורמות AI צד ג׳ (כגון HeyGen, Sora, ElevenLabs, MidJourney).
+          הזכויות על הטכנולוגיה שייכות לספקים הרלוונטיים, והשימוש בתוצרים באתר נעשה בהתאם לרישוי המותר. <br />
+          השימוש באתר ובסרטונים הוא באחריות המשתמש בלבד, ועלול לכלול אפקטים חזותיים מהירים או אורות מהבהבים. <br />
+          למידע נוסף קראו את{" "}
+          <a
+            href="/terms-of-use.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-white"
+          >
+            תנאי השימוש
+          </a>{" "}
+          ו־{" "}
+          <a
+            href="/privacy-policy.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-white"
+          >
+            מדיניות הפרטיות
+          </a>.
+        </div>
       </footer>
+
+
 
       {/* Floating WhatsApp */}
       <a
@@ -646,9 +706,9 @@ export default function DAISite() {
       </a>
 
 
-      {/* Accessibility & Epilepsy (non‑intrusive) */}
+      {/* Accessibility & Epilepsy (non‑intrusive)
       <EpilepsyModal open={epilepsyOpen} onAccept={acceptEpilepsy} onReduceMotion={reduceAndAccept} />
-      <A11yFab prefs={prefs} setPrefs={setPrefs} open={a11yOpen} setOpen={setA11yOpen} />
+      <A11yFab prefs={prefs} setPrefs={setPrefs} open={a11yOpen} setOpen={setA11yOpen} /> */}
     </div>
   );
 }
