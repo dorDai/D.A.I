@@ -88,13 +88,13 @@ const site = {
     sub: "וזה רק חלק קטן ממה שאפשר ליצור...",
     ctaPrimary: "דברו איתי ",
     ctaSecondary: "צפו בעבודות",
-    video: "https://player.cloudinary.com/embed/?cloud_name=dfbmxtx3p&public_id=dekel_4_ratovt&profile=cld-looping",
+    video: "https://res.cloudinary.com/dfbmxtx3p/video/upload/v1758978915/entery_-_%D7%A0%D7%95%D7%A6%D7%A8_%D7%91%D7%90%D7%9E%D7%A6%D7%A2%D7%95%D7%AA_Clipchamp_z3iqs3.mp4",
   },
   portfolio: [
-    { title: "דיבוב בכל שפה שתרצו", src: "https://res.cloudinary.com/dfbmxtx3p/video/upload/v1758976976/lanuges_-_%D7%A0%D7%95%D7%A6%D7%A8_%D7%91%D7%90%D7%9E%D7%A6%D7%A2%D7%95%D7%AA_Clipchamp_vfrzhf.mp4", note: "" },
-    { title: "הכלב שלכם מזמין אתכם לחגיגה", src: "https://res.cloudinary.com/dfbmxtx3p/video/upload/v1758976458/dogdog_-_%D7%A0%D7%95%D7%A6%D7%A8_%D7%91%D7%90%D7%9E%D7%A6%D7%A2%D7%95%D7%AA_Clipchamp_mhkzzw.mp4", note: "" },
-    { title: "כניסה", src: "https://res.cloudinary.com/dfbmxtx3p/video/upload/v1758978915/entery_-_%D7%A0%D7%95%D7%A6%D7%A8_%D7%91%D7%90%D7%9E%D7%A6%D7%A2%D7%95%D7%AA_Clipchamp_z3iqs3.mp4", note: "" },
-    { title: "אפטר פארטי", src: "https://res.cloudinary.com/dfbmxtx3p/video/upload/v1758978595/after_-_%D7%A0%D7%95%D7%A6%D7%A8_%D7%91%D7%90%D7%9E%D7%A6%D7%A2%D7%95%D7%AA_Clipchamp_uwuiz1.mp4", note: "" },
+    { title: "דיבוב בכל שפה שתרצו", src: "https://res.cloudinary.com/dfbmxtx3p/video/upload/f_auto,q_auto,w_720/v1758976976/lanuges_-_%D7%A0%D7%95%D7%A6%D7%A8_%D7%91%D7%90%D7%9E%D7%A6%D7%A2%D7%95%D7%AA_Clipchamp_vfrzhf.mp4", note: "" },
+    { title: "הכלב שלכם מזמין אתכם לחגיגה", src: "https://res.cloudinary.com/dfbmxtx3p/video/upload/f_auto,q_auto,w_720/v1758976458/dogdog_-_%D7%A0%D7%95%D7%A6%D7%A8_%D7%91%D7%90%D7%9E%D7%A6%D7%A2%D7%95%D7%AA_Clipchamp_mhkzzw.mp4", note: "" },
+    { title: "כניסה", src: "https://res.cloudinary.com/dfbmxtx3p/video/upload/f_auto,q_auto,w_720/v1757935114/dekel_4_ratovt.mp4", note: "" },
+    { title: "אפטר פארטי", src: "https://res.cloudinary.com/dfbmxtx3p/video/upload/f_auto,q_auto,w_720/v1758978595/after_-_%D7%A0%D7%95%D7%A6%D7%A8_%D7%91%D7%90%D7%9E%D7%A6%D7%A2%D7%95%D7%AA_Clipchamp_uwuiz1.mp4", note: "" },
 
   ],
   pricing: [
@@ -503,7 +503,7 @@ export default function DAISite() {
                     <li key={idx} className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-pink-400" /> {f}</li>
                   ))}
                 </ul>
-                <div className="text-md text-white/100 mt-3">{p.note}</div>
+                <div className="text-md text-white/100n mt-3">{p.note}</div>
               </Card>
             ))}
           </div>
