@@ -700,9 +700,9 @@ export default function DAISite() {
         href="https://wa.me/972544475705?text=%D7%94%D7%99%D7%99%20%D7%93%D7%95%D7%A8%2C%20%D7%9E%D7%A2%D7%95%D7%A0%D7%99%D7%99%D7%9F%20%D7%91%D7%A1%D7%A8%D7%98%D7%95%D7%9F%20%D7%91%D7%A2%D7%99%D7%A6%D7%95%D7%91%20%D7%90%D7%99%D7%A9%D7%99"
         target="_blank"
         rel="noreferrer"
-        className="fixed bottom-5 left-5 z-40 px-4 py-3 rounded-full bg-gradient-to-r from-green-400 to-green-600 text-black font-black shadow-lg hover:scale-105 transition"
+        className="fixed bottom-2 left-5 z-40 px-4 py-3 rounded-full bg-gradient-to-r from-green-400 to-green-600 text-black font-black shadow-lg hover:scale-105 transition"
       >
-        ווטסאפ – שריון מהיר
+         שריון מהיר
       </a>
 
 
