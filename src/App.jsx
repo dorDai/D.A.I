@@ -340,20 +340,20 @@ export default function DAISite() {
 
     emailjs
       .sendForm(
-        "service_dgsmucm",   // מה־EmailJS
-        "template_pkuceoi",  // מה־EmailJS
+        "service_dgsmucm",
+        "template_pkuceoi",
         formRef.current,
-        "RbKwnZqaDBHV82qY1"    // מה־EmailJS
+        "RbKwnZqaDBHV82qY1"
       )
       .then(
         () => {
-          setStatus("success");
+          setStatus("success"); // זה יפעיל את הפופ-אפ
           formRef.current.reset();
-          alert('הטופס נשלח בהצלחה ✅');
+          // הורדנו את ה-alert כדי שהפופ-אפ יופיע במקום
         },
         () => {
           setStatus("error");
-          alert('שגיאה בשליחה ❌');
+          alert('שגיאה בשליחה ❌'); // אפשר להשאיר כאן alert או לעשות פופ-אפ שגיאה בנפרד
         }
       );
   };
@@ -395,7 +395,7 @@ export default function DAISite() {
             </a>
 
             {/* Instagram */}
-            <a
+            {/* <a
               href="https://www.instagram.com/d.a.i_ai?igsh=MWduM2gwaGcxd2I0MA%3D%3D&utm_source=qr"
               target="_blank"
               rel="noreferrer"
@@ -410,10 +410,10 @@ export default function DAISite() {
                 <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zm4.5 3.25A5.25 5.25 0 1 1 6.75 12.5 5.25 5.25 0 0 1 12 7.25zm0 2A3.25 3.25 0 1 0 15.25 12.5 3.25 3.25 0 0 0 12 9.25zM17.75 6a1.25 1.25 0 1 1-1.25 1.25A1.25 1.25 0 0 1 17.75 6z" />
               </svg>
               <span className="hidden md:inline">אינסטגרם</span>
-            </a>
+            </a> */}
 
             {/* TikTok */}
-            <a
+            {/* <a
               href="https://www.tiktok.com/@rinaterblat?_t=ZS-90DWbS81sjU&_r=1" // 🔹 תחליף בלינק שלך
               target="_blank"
               rel="noreferrer"
@@ -428,7 +428,7 @@ export default function DAISite() {
                 <path d="M41 16.5c-2.2 0-4.4-.7-6.2-2v14.2c0 7.6-6.2 13.8-13.8 13.8-2.8 0-5.4-.8-7.5-2.3-2.9-2-4.8-5.4-4.8-9.2 0-6.2 5-11.2 11.2-11.2 1.1 0 2.1.2 3 .5v6.4c-.9-.6-2-1-3.2-1-3.1 0-5.6 2.5-5.6 5.6 0 1.9.9 3.6 2.4 4.6 1 .7 2.2 1.1 3.5 1.1 3.1 0 5.6-2.5 5.6-5.6V7h6.3c1.3 2.9 4.2 5 7.6 5.5V16.5z" />
               </svg>
               <span className="hidden md:inline">טיקטוק</span>
-            </a>
+            </a> */}
           </div>
 
 
@@ -646,6 +646,33 @@ export default function DAISite() {
 
       {/* Contact */}
       <section id="contact" className="py-14">
+        {/* --- Success Popup Modal --- */}
+      {status === "success" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="relative bg-[#0f0518] border border-pink-500/30 p-8 rounded-2xl max-w-sm w-full text-center shadow-[0_0_40px_rgba(236,72,153,0.2)] transform transition-all scale-100">
+            
+            {/* Icon */}
+            <div className="mx-auto w-16 h-16 bg-gradient-to-tr from-fuchsia-600 to-pink-500 rounded-full flex items-center justify-center mb-6 shadow-lg shadow-pink-500/40">
+              <span className="text-3xl">✨</span>
+            </div>
+
+            {/* Content */}
+            <h3 className="text-2xl font-bold text-white mb-2">תודה רבה!</h3>
+            <p className="text-white/70 mb-8">
+              הפרטים התקבלו בהצלחה.<br/>
+              ניצור איתך קשר בהקדם.
+            </p>
+
+            {/* Button */}
+            <button
+              onClick={() => setStatus(null)}
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-fuchsia-600 to-pink-500 font-bold text-black hover:brightness-110 transition-all active:scale-95"
+            >
+              סגור
+            </button>
+          </div>
+        </div>
+      )}
         <Container>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
