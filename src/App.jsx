@@ -2,6 +2,7 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { PlayCircle, Rocket, CheckCircle2, PhoneCall, ChevronRight, ChevronLeft, Send, Volume2, VolumeX, Pause, Play } from "lucide-react";
 import emailjs from "@emailjs/browser";
+import ThankYou from "./ThankYou";
 
 
 const VideoPlayer = ({ src, title, autoPlay = true }) => {
@@ -334,6 +335,23 @@ export default function DAISite() {
 
   const formRef = useRef(null);
   const [status, setStatus] = useState(null);
+  const [currentPage, setCurrentPage] = useState("home");
+
+  // עדכון URL כשמשנים דף
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.slice(1);
+      if (hash === '/thank-you') {
+        setCurrentPage('thank-you');
+      } else {
+        setCurrentPage('home');
+      }
+    };
+    
+    window.addEventListener('hashchange', handleHashChange);
+    handleHashChange(); // בדיקת ה-hash בעת init
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
   const sendEmail = (e) => {
     e.preventDefault();
@@ -347,16 +365,20 @@ export default function DAISite() {
       )
       .then(
         () => {
-          setStatus("success"); // זה יפעיל את הפופ-אפ
+          window.location.hash = '/thank-you'; // עדכון ה-URL
           formRef.current.reset();
-          // הורדנו את ה-alert כדי שהפופ-אפ יופיע במקום
         },
         () => {
           setStatus("error");
-          alert('שגיאה בשליחה ❌'); // אפשר להשאיר כאן alert או לעשות פופ-אפ שגיאה בנפרד
+          alert('שגיאה בשליחה ❌');
         }
       );
   };
+
+  // אם בעמוד ההודות, הצג את קומפוננט ThankYou
+  if (currentPage === "thank-you") {
+    return <ThankYou onBack={() => { window.location.hash = ''; }} />;
+  }
 
   return (
     <div dir="rtl" lang="he" className="text-white">
@@ -646,33 +668,6 @@ export default function DAISite() {
 
       {/* Contact */}
       <section id="contact" className="py-14">
-        {/* --- Success Popup Modal --- */}
-      {status === "success" && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="relative bg-[#0f0518] border border-pink-500/30 p-8 rounded-2xl max-w-sm w-full text-center shadow-[0_0_40px_rgba(236,72,153,0.2)] transform transition-all scale-100">
-            
-            {/* Icon */}
-            <div className="mx-auto w-16 h-16 bg-gradient-to-tr from-fuchsia-600 to-pink-500 rounded-full flex items-center justify-center mb-6 shadow-lg shadow-pink-500/40">
-              <span className="text-3xl">✨</span>
-            </div>
-
-            {/* Content */}
-            <h3 className="text-2xl font-bold text-white mb-2">תודה רבה!</h3>
-            <p className="text-white/70 mb-8">
-              הפרטים התקבלו בהצלחה.<br/>
-              ניצור איתך קשר בהקדם.
-            </p>
-
-            {/* Button */}
-            <button
-              onClick={() => setStatus(null)}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-fuchsia-600 to-pink-500 font-bold text-black hover:brightness-110 transition-all active:scale-95"
-            >
-              סגור
-            </button>
-          </div>
-        </div>
-      )}
         <Container>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
@@ -716,13 +711,6 @@ export default function DAISite() {
                   </a>
                 </div>
               </form>
-
-              {status === "success" && (
-                <p className="text-green-400 mt-3 text-sm">הטופס נשלח בהצלחה ✅</p>
-              )}
-              {status === "error" && (
-                <p className="text-red-400 mt-3 text-sm">שגיאה בשליחה ❌</p>
-              )}
             </Card>
           </div>
         </Container>
