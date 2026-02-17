@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { PlayCircle, Rocket, CheckCircle2, PhoneCall, ChevronRight, ChevronLeft, Send, Volume2, VolumeX, Pause, Play } from "lucide-react";
+import { PlayCircle, Rocket, CheckCircle2, ChevronRight, ChevronLeft, Volume2, VolumeX, Pause, Play } from "lucide-react";
 import emailjs from "@emailjs/browser";
 import ThankYou from "./ThankYou";
 
@@ -182,114 +182,11 @@ const SectionTitle = ({ title, sub }) => (
   </div>
 );
 
-// === Accessibility Add‑ons (add-only) ===
-const A11yFab = ({ prefs, setPrefs, open, setOpen }) => (
-  <div className="fixed bottom-20 left-5 z-50">
-    <button
-      aria-label="אפשרויות נגישות"
-      onClick={() => setOpen(!open)}
-      className="px-3 py-2 text-sm rounded-full bg-white/10 border border-white/10 backdrop-blur-md hover:bg-white/20"
-    >
-      ♿
-    </button>
-    {open && (
-      <div className="mt-2 w-60 p-3 rounded-2xl bg-black/80 border border-white/10 backdrop-blur-md text-sm space-y-3">
-        <label className="flex items-center justify-between gap-3">
-          <span>ניגודיות גבוהה</span>
-          <input
-            type="checkbox"
-            checked={prefs.highContrast}
-            onChange={(e) =>
-              setPrefs((prev) => ({ ...prev, highContrast: e.target.checked }))
-            }
-          />
-        </label>
-        <label className="flex items-center justify-between gap-3">
-          <span>הפחתת אנימציות</span>
-          <input
-            type="checkbox"
-            checked={prefs.reducedMotion}
-            onChange={(e) =>
-              setPrefs((prev) => ({ ...prev, reducedMotion: e.target.checked }))
-            }
-          />
-        </label>
-        <div className="flex items-center justify-between">
-          <span>גודל גופן</span>
-          <div className="flex gap-2">
-            <button
-              onClick={() =>
-                setPrefs((p) => ({
-                  ...p,
-                  fontScale: Math.max(0.85, +(p.fontScale - 0.05).toFixed(2)),
-                }))
-              }
-              className="px-2 py-1 bg-white/10 rounded"
-            >
-              A-
-            </button>
-            <button
-              onClick={() =>
-                setPrefs((p) => ({
-                  ...p,
-                  fontScale: Math.min(1.4, +(p.fontScale + 0.05).toFixed(2)),
-                }))
-              }
-              className="px-2 py-1 bg-white/10 rounded"
-            >
-              A+
-            </button>
-          </div>
-        </div>
-        <button
-          onClick={() =>
-            setPrefs({ highContrast: false, reducedMotion: false, fontScale: 1 })
-          }
-          className="w-full px-3 py-2 bg-white/10 rounded"
-        >
-          איפוס
-        </button>
-      </div>
-    )}
-  </div>
-);
-
-
-const EpilepsyModal = ({ open, onAccept, onReduceMotion }) => {
-  if (!open) return null;
-  return (
-    <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-4">
-      <div className="max-w-lg w-full rounded-2xl bg-[#120012] border border-pink-500/30 p-6 text-white">
-        <h3 className="font-display text-2xl font-extrabold text-pink-400 mb-2">אזהרה: יתכנו אורות מהבהבים</h3>
-        <p className="text-sm text-white/80 leading-relaxed">חלק מהסרטונים באתר כוללים אפקטים מהירים שעלולים להשפיע על אנשים הרגישים לאורות מהבהבים (פוטוסנסטיביות/אפילפסיה). אם את/ה רגיש/ה – הפעל/י מצב "הפחתת אנימציות" או הימנע/י מצפייה.</p>
-        <div className="mt-4 flex flex-wrap gap-3">
-          <button onClick={onReduceMotion} className="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20">הפעל הפחתת אנימציות</button>
-          <button onClick={onAccept} className="px-4 py-2 rounded-lg bg-gradient-to-r from-fuchsia-600 to-pink-500 text-black font-bold">הבנתי, המשך</button>
-        </div>
-        <p className="mt-3 text-[11px] text-white/60">אין באמור ייעוץ רפואי. שימוש בתוכן על אחריות המשתמש בלבד.</p>
-      </div>
-    </div>
-  );
-};
-
 // === COMPONENT ===
 export default function DAISite() {
-  // Accessibility prefs (add‑only)
-  const [prefs, setPrefs] = useState({ highContrast: false, reducedMotion: false, fontScale: 1 });
-  const [a11yOpen, setA11yOpen] = useState(false);
-  const [epilepsyOpen, setEpilepsyOpen] = useState(false);
-  useEffect(() => { try { const s = localStorage.getItem('a11y_prefs'); if (s) setPrefs(JSON.parse(s)); } catch { } try { const ack = localStorage.getItem('epilepsy_ack'); if (!ack) setEpilepsyOpen(true); } catch { setEpilepsyOpen(true); } }, []);
-  useEffect(() => { try { localStorage.setItem('a11y_prefs', JSON.stringify(prefs)); } catch { } }, [prefs]);
-  useEffect(() => { const b = document.body; if (!b) return; prefs.reducedMotion ? b.classList.add('reduced-motion') : b.classList.remove('reduced-motion'); prefs.highContrast ? b.classList.add('high-contrast') : b.classList.remove('high-contrast'); b.style.fontSize = `${Math.round(prefs.fontScale * 100)}%`; }, [prefs]);
-  const acceptEpilepsy = () => { try { localStorage.setItem('epilepsy_ack', '1'); } catch { } setEpilepsyOpen(false); };
-  const reduceAndAccept = () => { setPrefs(p => ({ ...p, reducedMotion: true })); acceptEpilepsy(); };
-
   // Testimonials + approval
   const [testimonials, setTestimonials] = useState(site.testimonialsSeed);
   const [pendingTestimonials, setPendingTestimonials] = useState([]);
-  const [newName, setNewName] = useState("");
-  const [newText, setNewText] = useState("");
-  const [newAvatar, setNewAvatar] = useState("");
   const [adminMode, setAdminMode] = useState(false);
   const scrollerRef = useRef(null);
 
@@ -306,14 +203,6 @@ export default function DAISite() {
   useEffect(() => { try { localStorage.setItem('dai_testimonials_approved', JSON.stringify(testimonials)); } catch { } }, [testimonials]);
   useEffect(() => { try { localStorage.setItem('dai_testimonials_pending', JSON.stringify(pendingTestimonials)); } catch { } }, [pendingTestimonials]);
 
-  const addTestimonial = (e) => {
-    e.preventDefault();
-    if (!newName.trim() || !newText.trim()) return;
-    const item = { name: newName.trim(), text: newText.trim(), avatar: newAvatar.trim() || "/client_placeholder.jpg" };
-    setPendingTestimonials([item, ...pendingTestimonials]);
-    setNewName(""); setNewText(""); setNewAvatar("");
-    alert('ההמלצה נשלחה וממתינה לאישור מנהל.');
-  };
   const approveTestimonial = (index) => {
     const item = pendingTestimonials[index]; if (!item) return;
     const rest = pendingTestimonials.filter((_, i) => i !== index);
@@ -334,7 +223,6 @@ export default function DAISite() {
 
 
   const formRef = useRef(null);
-  const [status, setStatus] = useState(null);
   const [currentPage, setCurrentPage] = useState("home");
 
   // עדכון URL כשמשנים דף
@@ -369,7 +257,6 @@ export default function DAISite() {
           formRef.current.reset();
         },
         () => {
-          setStatus("error");
           alert('שגיאה בשליחה ❌');
         }
       );
@@ -755,11 +642,6 @@ export default function DAISite() {
       >
         שריון מהיר
       </a>
-
-
-      {/* Accessibility & Epilepsy (non‑intrusive)
-      <EpilepsyModal open={epilepsyOpen} onAccept={acceptEpilepsy} onReduceMotion={reduceAndAccept} />
-      <A11yFab prefs={prefs} setPrefs={setPrefs} open={a11yOpen} setOpen={setA11yOpen} /> */}
     </div>
   );
 
