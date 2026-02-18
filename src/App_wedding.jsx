@@ -243,6 +243,7 @@ export default function DAISite() {
   const sendEmail = (e) => {
     e.preventDefault();
 
+    // Send email first (reads form values)
     emailjs
       .sendForm(
         "service_dgsmucm",
@@ -252,13 +253,17 @@ export default function DAISite() {
       )
       .then(
         () => {
-          window.location.hash = '/thank-you'; // עדכון ה-URL
-          formRef.current.reset();
+          console.log('✅ Email sent successfully');
         },
-        () => {
-          alert('שגיאה בשליחה ❌');
+        (error) => {
+          console.error('❌ Email sending failed:', error);
         }
       );
+
+    // Show thank you page immediately
+    setCurrentPage('thank-you');
+    window.location.hash = '/thank-you';
+    formRef.current.reset();
   };
 
   // אם בעמוד ההודות, הצג את קומפוננט ThankYou
