@@ -104,7 +104,6 @@ const site = {
     tagline: "NEXTGEN VIDEO",
     logoImg: "https://res.cloudinary.com/dfbmxtx3p/image/upload/v1758982081/logodor_kayefp.png",
     whatsapp: "https://wa.me/972544475705?text=היי%20דור,%20אני%20רוצה%20סרטון%20AI%20מרשים!",
-    email: "dordor860@gmail.com",
   },
   team: [
     { name: "אסטריה", avatar: "https://res.cloudinary.com/dfbmxtx3p/image/upload/v1758979488/avatar1_bq9and.png" },
@@ -115,7 +114,7 @@ const site = {
     { name: "ועוד המון בעיצוב אישי", avatar: "https://res.cloudinary.com/dfbmxtx3p/image/upload/v1758980614/20250927_1642_%D7%A7%D7%95%D7%9C%D7%90%D7%96_%D7%90%D7%95%D7%95%D7%90%D7%98%D7%A8%D7%99%D7%95%D7%AA_%D7%A2%D7%AA%D7%99%D7%93%D7%A0%D7%99_remix_01k65pf5vyex8v6grb5bmb29zk_blfvjr.png" },
   ],
   hero: {
-    headline: "סרטוני AI קולנועיים ברמה הגבוהה ביותר",
+    headline: "סרטוני AI לבר מצווה ברמה הגבוהה ביותר",
     sub: "תנו למסכים לרקוד יחד איתכם",
     ctaPrimary: "דברו איתי ",
     ctaSecondary: "צפו בעבודות",
@@ -285,23 +284,6 @@ export default function DAISite() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            {/* WhatsApp */}
-            <a
-              href={site.brand.whatsapp}
-              target="_blank"
-              rel="noreferrer"
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-green-400 to-green-600 text-black font-bold flex items-center gap-2 hover:brightness-110 transition"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-5 h-5"
-                viewBox="0 0 32 32"
-                fill="currentColor"
-              >
-                <path d="M16 .4C7.4.4.4 7.4.4 16c0 2.8.7 5.4 2 7.7L.1 31.9l8.4-2.2c2.2 1.2 4.8 1.9 7.5 1.9 8.6 0 15.6-7 15.6-15.6C31.6 7.4 24.6.4 16 .4zm0 28.5c-2.4 0-4.7-.6-6.7-1.8l-.5-.3-5 1.3 1.3-4.9-.3-.5c-1.2-2-1.8-4.3-1.8-6.7C3 9.2 8.9 3.3 16 3.3S29 9.2 29 16.3c0 7.1-5.9 12.6-13 12.6zm7.5-9.5c-.4-.2-2.4-1.2-2.8-1.3s-.6-.2-.8.2-1 1.3-1.2 1.5-.4.3-.8.1c-.4-.2-1.5-.6-2.8-1.8-1-1-1.8-2.2-2-2.6-.2-.4 0-.6.2-.8.2-.2.4-.4.6-.6.2-.2.3-.3.4-.5.1-.2.1-.4 0-.6-.1-.2-.8-1.9-1.1-2.6-.3-.7-.6-.6-.8-.6h-.7c-.2 0-.6.1-1 .4-.4.3-1.3 1.2-1.3 3s1.4 3.5 1.6 3.7c.2.2 2.8 4.2 6.8 5.9.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.4-1 2.7-1.9.3-.9.3-1.6.2-1.9-.1-.3-.4-.4-.8-.6z" />
-              </svg>
-              <span className="hidden md:inline">ווטסאפ</span>
-            </a>
 
             {/* Instagram */}
             {/* <a
@@ -347,11 +329,22 @@ export default function DAISite() {
       {/* Hero */}
       <section className="relative py-16 md:py-24">
         <Container className="grid md:grid-cols-2 gap-10 items-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <motion.div className="pt-8 md:pt-12" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <h1 className="font-display text-[40px] sm:text-6xl md:text-7xl leading-[1.05] tracking-tight font-black bg-gradient-to-r from-pink-400 via-fuchsia-400 to-purple-500 bg-clip-text text-transparent drop-shadow-xl">{site.hero.headline}</h1>
             <p className="mt-4 text-white/90 text-lg">{site.hero.sub}</p>
             <div className="mt-8 flex gap-3">
-              <a href={site.brand.whatsapp} target="_blank" rel="noreferrer" className="px-5 py-3 rounded-xl bg-gradient-to-r from-fuchsia-600 to-pink-500 font-extrabold text-black hover:brightness-110 transition flex items-center gap-2"><Rocket className="w-5 h-5" /> {site.hero.ctaPrimary}</a>
+              <a
+                href="#contact"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const el = document.getElementById('contact');
+                  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  else window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                }}
+                className="px-5 py-3 rounded-xl bg-gradient-to-r from-fuchsia-600 to-pink-500 font-extrabold text-black hover:brightness-110 transition flex items-center gap-2"
+              >
+                <Rocket className="w-5 h-5" /> {site.hero.ctaPrimary}
+              </a>
               <a href="#portfolio" className="px-5 py-3 rounded-xl bg-white/10 border border-white/10 hover:bg-white/20 transition flex items-center gap-2"><PlayCircle className="w-5 h-5" /> {site.hero.ctaSecondary}</a>
             </div>
           </motion.div>
@@ -590,13 +583,6 @@ export default function DAISite() {
                 <button type="submit" className="px-5 py-3 rounded-xl bg-gradient-to-r from-fuchsia-600 to-pink-500 font-bold text-black hover:brightness-110 transition">
                   קבלו הצעת מחיר
                 </button>
-
-                <div className="text-xs text-white/70">
-                  או במייל:{" "}
-                  <a className="underline ml-1" href={`mailto:${site.brand.email}`}>
-                    {site.brand.email}
-                  </a>
-                </div>
               </form>
             </Card>
           </div>
@@ -630,18 +616,6 @@ export default function DAISite() {
           </a>.
         </div>
       </footer>
-
-
-
-      {/* Floating WhatsApp */}
-      <a
-        href="https://wa.me/972544475705?text=%D7%94%D7%99%D7%99%20%D7%93%D7%95%D7%A8%2C%20%D7%9E%D7%A2%D7%95%D7%A0%D7%99%D7%99%D7%9F%20%D7%91%D7%A1%D7%A8%D7%98%D7%95%D7%9F%20%D7%91%D7%A2%D7%99%D7%A6%D7%95%D7%91%20%D7%90%D7%99%D7%A9%D7%99"
-        target="_blank"
-        rel="noreferrer"
-        className="fixed bottom-2 left-5 z-40 px-4 py-3 rounded-full bg-gradient-to-r from-green-400 to-green-600 text-black font-black shadow-lg hover:scale-105 transition"
-      >
-        שריון מהיר
-      </a>
     </div>
   );
 
